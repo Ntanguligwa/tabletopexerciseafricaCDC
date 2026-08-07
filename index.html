@@ -37,7 +37,7 @@
             display: none;
             justify-content: center;
             padding: 1rem 1.5rem;
-            background: rgba(0,0,0,0.12); /* Lighter backdrop */
+            background: rgba(0,0,0,0.12);
             backdrop-filter: blur(2px);
             animation: bannerDrop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
@@ -58,15 +58,8 @@
             opacity: 0.95;
             transition: opacity 0.3s ease;
         }
-        .banner-content:hover {
-            opacity: 1;
-        }
-
-        .banner-content img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        .banner-content:hover { opacity: 1; }
+        .banner-content img { width: 100%; height: auto; display: block; }
 
         .banner-close {
             position: absolute;
@@ -99,6 +92,83 @@
         }
 
         /* ============================================================
+           PROCESS FLOW STATUS BAR
+           ============================================================ */
+        .process-flow {
+            background: #ffffff;
+            border: 1px solid #e2eaf0;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #8a9b91;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .process-step.active {
+            color: #0f3b2c;
+            opacity: 1;
+        }
+        .process-step.completed {
+            color: #2b8c5e;
+            opacity: 1;
+        }
+        .process-step.completed .step-icon {
+            background: #2b8c5e;
+            color: white;
+        }
+        .process-step.active .step-icon {
+            background: #d4af37;
+            color: white;
+        }
+        .process-step .step-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #eef3f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .process-step .step-label {
+            white-space: nowrap;
+        }
+        .process-step .step-status {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .process-step.completed .step-status { color: #2b8c5e; }
+        .process-step.active .step-status { color: #d4af37; }
+        .process-step.locked .step-status { color: #c0392b; }
+
+        .process-arrow {
+            color: #d4af37;
+            font-size: 1.2rem;
+            opacity: 0.3;
+        }
+        .process-arrow.active {
+            opacity: 0.8;
+        }
+
+        /* ============================================================
            ACCESSIBILITY: focus styles
            ============================================================ */
         .project-card:focus-visible {
@@ -106,7 +176,6 @@
             outline-offset: 2px;
             transform: translateY(-4px);
         }
-
         .btn-primary:focus-visible,
         .btn-secondary:focus-visible,
         .modal-close:focus-visible {
@@ -172,14 +241,42 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
             cursor: pointer;
             background: #ffffff;
             border: 1px solid #e2eaf0;
+            position: relative;
         }
-        .project-card:hover {
+        .project-card:hover:not(.locked) {
             transform: translateY(-6px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        .project-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+        .project-card.locked .overlay {
+            background: linear-gradient(transparent, rgba(100, 100, 100, 0.8));
+        }
+        .project-card.locked .lock-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(4px);
+        }
+        .project-card:not(.locked) .lock-badge {
+            display: none;
         }
 
         .projects-container {
@@ -195,7 +292,7 @@
             display: block;
             transition: transform 0.3s ease;
         }
-        .project-card:hover .projects-container img {
+        .project-card:hover:not(.locked) .projects-container img {
             transform: scale(1.06);
         }
 
@@ -308,6 +405,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 0.75rem;
+            flex-wrap: wrap;
         }
         .modal-footer .btn-secondary {
             background: #eef3f0;
@@ -333,6 +431,11 @@
             transition: background 0.2s, transform 0.15s;
         }
         .modal-footer .btn-primary:hover { background: #1a5a3e; transform: scale(1.02); }
+        .modal-footer .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         /* footer */
         .khub-footer {
@@ -384,6 +487,9 @@
             .modal-content { padding: 1.5rem; margin: 0.5rem; }
             .banner-close { top: 0.4rem; right: 0.4rem; width: 32px; height: 32px; font-size: 1rem; }
             .banner-content { width: 95%; }
+            .process-flow { flex-direction: column; align-items: stretch; gap: 0.4rem; }
+            .process-step { font-size: 0.7rem; }
+            .process-arrow { display: none; }
         }
         @media (max-width: 480px) {
             .project-card { flex: 1 1 100%; max-width: 100%; }
@@ -415,43 +521,104 @@
         <span>Tabletop Exercise · Ethics Review Timelines to 10–15 Days</span>
     </header>
 
+    <!-- ============================================================
+         PROCESS FLOW STATUS BAR
+         ============================================================ -->
+    <div class="process-flow" role="status" aria-label="Process flow status">
+        <div class="process-step active" id="step1">
+            <span class="step-icon">1</span>
+            <span class="step-label">Checklist</span>
+            <span class="step-status" id="step1Status">Ready</span>
+        </div>
+        <span class="process-arrow" id="arrow1">→</span>
+        <div class="process-step active" id="step2">
+            <span class="step-icon">2</span>
+            <span class="step-label">NDA &amp; COI</span>
+            <span class="step-status" id="step2Status">Ready</span>
+        </div>
+        <span class="process-arrow" id="arrow2">→</span>
+        <div class="process-step locked" id="step3">
+            <span class="step-icon">3</span>
+            <span class="step-label">Submissions</span>
+            <span class="step-status" id="step3Status">Locked</span>
+        </div>
+        <span class="process-arrow" id="arrow3">→</span>
+        <div class="process-step locked" id="step4">
+            <span class="step-icon">4</span>
+            <span class="step-label">Ethics Review</span>
+            <span class="step-status" id="step4Status">Locked</span>
+        </div>
+        <span class="process-arrow" id="arrow4">→</span>
+        <div class="process-step locked" id="step5">
+            <span class="step-icon">5</span>
+            <span class="step-label">Regulatory Review</span>
+            <span class="step-status" id="step5Status">Locked</span>
+        </div>
+        <span class="process-arrow" id="arrow5">→</span>
+        <div class="process-step locked" id="step6">
+            <span class="step-icon">6</span>
+            <span class="step-label">Joint Review</span>
+            <span class="step-status" id="step6Status">Locked</span>
+        </div>
+    </div>
+
     <!-- navigation -->
     <section class="section-head">
         <h1><i class="fa fa-arrow-circle-right" style="color:#d4af37;" aria-hidden="true"></i> Select an Activity</h1>
-        <p><em>Click on a card to access.</em></p>
+        <p><em>Click on a card to access. Complete steps in order.</em></p>
     </section>
 
     <!-- cards -->
     <div class="projects-row" role="list">
-        <!-- card 1 -->
-        <div class="project-card" role="listitem" tabindex="0" data-title="Submission Checklist" data-icon="fa-check-square-o" data-desc="Complete the submission checklist before proceeding with the ethics review." data-link="https://redcap.link/g2ac0b76" aria-label="Submission Checklist form">
+        <!-- card 1: Submission Checklist (Step 1 - Always accessible) -->
+        <div class="project-card" role="listitem" tabindex="0" data-title="Submission Checklist" data-icon="fa-check-square-o" data-desc="Complete the submission checklist before proceeding with the ethics review." data-link="https://redcap.link/g2ac0b76" data-step="1" aria-label="Submission Checklist form">
             <div class="projects-container">
                 <img src="checklist.jpg" alt="" role="presentation" />
                 <div class="overlay">Submission Checklist</div>
             </div>
         </div>
 
-        <!-- card 2 -->
-        <div class="project-card" role="listitem" tabindex="0" data-title="NDA &amp; Conflict of Interest" data-icon="fa-file-text-o" data-desc="Sign the NDA and conflict of interest forms required for the review panel." data-link="https://redcap.link/3e1punxf" aria-label="NDA and Conflict of Interest forms">
+        <!-- card 2: NDA (Step 2 - Always accessible) -->
+        <div class="project-card" role="listitem" tabindex="0" data-title="NDA &amp; Conflict of Interest" data-icon="fa-file-text-o" data-desc="Sign the NDA and conflict of interest forms required for the review panel." data-link="https://redcap.link/3e1punxf" data-step="2" aria-label="NDA and Conflict of Interest forms">
             <div class="projects-container">
                 <img src="nda.jpg" alt="" role="presentation" />
                 <div class="overlay">NDA &amp; COI Forms</div>
             </div>
         </div>
 
-        <!-- card 3 -->
-        <div class="project-card" role="listitem" tabindex="0" data-title="Ethics Review Form" data-icon="fa-balance-scale" data-desc="Submit the ethics review form for ethics reviewers." data-link="https://redcap.link/vmkzht32" aria-label="Ethics Review Form">
+        <!-- card 3: Submissions (Step 3 - requires NDA) -->
+        <div class="project-card locked" role="listitem" tabindex="0" data-title="Submissions" data-icon="fa-upload" data-desc="Submit your protocol and supporting documents for review." data-link="https://tools.africacdc.org/africacdcrc/surveys/?__report=ADT4WYXH79N4J7LW" data-step="3" aria-label="Submissions form">
             <div class="projects-container">
-                <img src="ethics.jpg" alt="" role="presentation" />
-                <div class="overlay">Ethics Review Form</div>
+                <img src="submissions.jpg" alt="" role="presentation" />
+                <div class="overlay">Submissions</div>
+                <div class="lock-badge"><i class="fa fa-lock" aria-hidden="true"></i> Locked</div>
             </div>
         </div>
 
-        <!-- card 4 -->
-        <div class="project-card" role="listitem" tabindex="0" data-title="Regulatory Review Form" data-icon="fa-gavel" data-desc="Complete the regulatory review form for regulatory reviewers." data-link="#" aria-label="Regulatory Review Form">
+        <!-- card 4: Ethics Review Form (Step 4 - requires NDA) -->
+        <div class="project-card locked" role="listitem" tabindex="0" data-title="Ethics Review Form" data-icon="fa-balance-scale" data-desc="Submit the ethics review form for ethics reviewers." data-link="https://redcap.link/vmkzht32" data-step="4" aria-label="Ethics Review Form">
+            <div class="projects-container">
+                <img src="ethics.jpg" alt="" role="presentation" />
+                <div class="overlay">Ethics Review Form</div>
+                <div class="lock-badge"><i class="fa fa-lock" aria-hidden="true"></i> Locked</div>
+            </div>
+        </div>
+
+        <!-- card 5: Regulatory Review Form (Step 5 - requires NDA) -->
+        <div class="project-card locked" role="listitem" tabindex="0" data-title="Regulatory Review Form" data-icon="fa-gavel" data-desc="Complete the regulatory review form for regulatory reviewers." data-link="#" data-step="5" aria-label="Regulatory Review Form">
             <div class="projects-container">
                 <img src="regulatory.jpg" alt="" role="presentation" />
                 <div class="overlay">Regulatory Review Form</div>
+                <div class="lock-badge"><i class="fa fa-lock" aria-hidden="true"></i> Locked</div>
+            </div>
+        </div>
+
+        <!-- card 6: Joint Review Form (Step 6 - requires NDA) -->
+        <div class="project-card locked" role="listitem" tabindex="0" data-title="Joint Review Form" data-icon="fa-handshake-o" data-desc="Complete the joint review form for joint reviewers." data-link="#" data-step="6" aria-label="Joint Review Form">
+            <div class="projects-container">
+                <img src="joint.jpg" alt="" role="presentation" />
+                <div class="overlay">Joint Review Form</div>
+                <div class="lock-badge"><i class="fa fa-lock" aria-hidden="true"></i> Locked</div>
             </div>
         </div>
     </div>
@@ -516,6 +683,42 @@
     (function() {
         'use strict';
 
+        // ============================================================
+        // STATE MANAGEMENT - Using localStorage for persistence
+        // ============================================================
+        const STATE_KEY = 'africa_cdc_process_state';
+        
+        // Default state: Only Steps 1 & 2 are accessible
+        let processState = {
+            step1_completed: false,  // Submission Checklist
+            step2_completed: false,  // NDA & COI
+            step3_completed: false,  // Submissions
+            step4_completed: false,  // Ethics Review
+            step5_completed: false,  // Regulatory Review
+            step6_completed: false   // Joint Review
+        };
+
+        // Load state from localStorage (persists forever)
+        function loadState() {
+            const saved = localStorage.getItem(STATE_KEY);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    processState = { ...processState, ...parsed };
+                } catch (e) {
+                    // ignore
+                }
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem(STATE_KEY, JSON.stringify(processState));
+        }
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
         const modal = document.getElementById('cardModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalSub = document.getElementById('modalSub');
@@ -523,56 +726,160 @@
         const modalIcon = document.getElementById('modalIcon');
         const modalActionBtn = document.getElementById('modalActionBtn');
 
-        // Banner
         const banner = document.getElementById('bannerOverlay');
         const BANNER_KEY = 'africa_cdc_banner_dismissed';
 
-        // Check if banner was dismissed in this session
-        if (sessionStorage.getItem(BANNER_KEY) !== 'true') {
-            // Show banner on load with a slight delay
+        // Step elements
+        const stepEls = {
+            1: document.getElementById('step1'),
+            2: document.getElementById('step2'),
+            3: document.getElementById('step3'),
+            4: document.getElementById('step4'),
+            5: document.getElementById('step5'),
+            6: document.getElementById('step6')
+        };
+        const stepStatusEls = {
+            1: document.getElementById('step1Status'),
+            2: document.getElementById('step2Status'),
+            3: document.getElementById('step3Status'),
+            4: document.getElementById('step4Status'),
+            5: document.getElementById('step5Status'),
+            6: document.getElementById('step6Status')
+        };
+        const arrowEls = {
+            1: document.getElementById('arrow1'),
+            2: document.getElementById('arrow2'),
+            3: document.getElementById('arrow3'),
+            4: document.getElementById('arrow4'),
+            5: document.getElementById('arrow5')
+        };
+
+        // All cards
+        const cards = document.querySelectorAll('.project-card');
+
+        // ============================================================
+        // STEP COMPLETION FUNCTIONS
+        // ============================================================
+        function completeStep(stepNumber) {
+            const key = `step${stepNumber}_completed`;
+            processState[key] = true;
+            saveState();
+            updateUI();
+        }
+
+        function isStepCompleted(stepNumber) {
+            return processState[`step${stepNumber}_completed`] === true;
+        }
+
+        function isStepAccessible(stepNumber) {
+            // Step 1 (Checklist) - always accessible
+            if (stepNumber === 1) return true;
+            // Step 2 (NDA) - always accessible
+            if (stepNumber === 2) return true;
+            // Steps 3, 4, 5, 6 require NDA (Step 2)
+            if (stepNumber === 3) return isStepCompleted(2);
+            if (stepNumber === 4) return isStepCompleted(2);
+            if (stepNumber === 5) return isStepCompleted(2);
+            if (stepNumber === 6) return isStepCompleted(2);
+            return false;
+        }
+
+        // ============================================================
+        // UPDATE UI
+        // ============================================================
+        function updateUI() {
+            // Update step statuses
+            for (let i = 1; i <= 6; i++) {
+                const el = stepEls[i];
+                const statusEl = stepStatusEls[i];
+                const completed = isStepCompleted(i);
+                const accessible = isStepAccessible(i);
+
+                // Remove all classes
+                el.classList.remove('active', 'completed', 'locked');
+
+                if (completed) {
+                    el.classList.add('completed');
+                    statusEl.textContent = '✓ Done';
+                } else if (accessible) {
+                    el.classList.add('active');
+                    statusEl.textContent = 'Ready';
+                } else {
+                    el.classList.add('locked');
+                    statusEl.textContent = '🔒 Locked';
+                }
+            }
+
+            // Update arrows
+            for (let i = 1; i <= 5; i++) {
+                const arrow = arrowEls[i];
+                if (isStepCompleted(i)) {
+                    arrow.classList.add('active');
+                } else {
+                    arrow.classList.remove('active');
+                }
+            }
+
+            // Update cards
+            cards.forEach(card => {
+                const step = parseInt(card.dataset.step);
+                const accessible = isStepAccessible(step);
+                const completed = isStepCompleted(step);
+
+                if (accessible || completed) {
+                    card.classList.remove('locked');
+                    card.style.opacity = '1';
+                    card.style.cursor = 'pointer';
+                    card.setAttribute('aria-disabled', 'false');
+                } else {
+                    card.classList.add('locked');
+                    card.style.opacity = '0.6';
+                    card.style.cursor = 'not-allowed';
+                    card.setAttribute('aria-disabled', 'true');
+                }
+            });
+        }
+
+        // ============================================================
+        // BANNER LOGIC
+        // ============================================================
+        if (localStorage.getItem(BANNER_KEY) !== 'true') {
             window.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     banner.classList.add('visible');
-                    
-                    // Auto-dismiss after 8 seconds
                     const autoDismissTimer = setTimeout(function() {
                         closeBanner();
                     }, 8000);
-                    
-                    // Store timer so we can clear it if user interacts
                     banner._autoDismissTimer = autoDismissTimer;
                 }, 300);
             });
         }
 
-        // Close banner function with sessionStorage persistence
         window.closeBanner = function() {
             banner.classList.remove('visible');
-            // Clear auto-dismiss timer
             if (banner._autoDismissTimer) {
                 clearTimeout(banner._autoDismissTimer);
                 banner._autoDismissTimer = null;
             }
-            // Remember dismissal for this session
-            sessionStorage.setItem(BANNER_KEY, 'true');
+            localStorage.setItem(BANNER_KEY, 'true');
         };
 
-        // Click outside banner to dismiss (on the overlay)
         document.getElementById('bannerOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeBanner();
-            }
+            if (e.target === this) closeBanner();
         });
 
-        // card data mapping
+        // ============================================================
+        // CARD DATA
+        // ============================================================
         const iconMap = {
             'Submission Checklist': 'fa-check-square-o',
             'NDA &amp; Conflict of Interest': 'fa-file-text-o',
+            'Submissions': 'fa-upload',
             'Ethics Review Form': 'fa-balance-scale',
-            'Regulatory Review Form': 'fa-gavel'
+            'Regulatory Review Form': 'fa-gavel',
+            'Joint Review Form': 'fa-handshake-o'
         };
 
-        // detail mapping for each card
         const detailMap = {
             'Submission Checklist': [
                 { label: 'Type', value: 'Pre‑submission checklist' },
@@ -586,6 +893,12 @@
                 { label: 'Purpose', value: 'Protect sensitive information and disclose potential conflicts.' },
                 { label: 'Required for', value: 'Review panel members and observers' }
             ],
+            'Submissions': [
+                { label: 'Type', value: 'Protocol submission' },
+                { label: 'Estimated time', value: '10–15 minutes' },
+                { label: 'Purpose', value: 'Submit your protocol and supporting documents for review.' },
+                { label: 'Required for', value: 'All research protocols' }
+            ],
             'Ethics Review Form': [
                 { label: 'Type', value: 'Ethics review' },
                 { label: 'Estimated time', value: '15–20 minutes' },
@@ -597,10 +910,20 @@
                 { label: 'Estimated time', value: '15–20 minutes' },
                 { label: 'Purpose', value: 'Regulatory review for submitted protocols.' },
                 { label: 'Required for', value: 'All interventions seeking emergency approval' }
+            ],
+            'Joint Review Form': [
+                { label: 'Type', value: 'Joint review' },
+                { label: 'Estimated time', value: '15–20 minutes' },
+                { label: 'Purpose', value: 'Joint review by ethics and regulatory committees.' },
+                { label: 'Required for', value: 'All protocols requiring joint approval' }
             ]
         };
 
+        // ============================================================
+        // MODAL LOGIC
+        // ============================================================
         let currentLink = '#';
+        let currentStep = 1;
 
         function closeModal() {
             modal.classList.remove('open');
@@ -628,8 +951,9 @@
             }
         }
 
-        function openModal(title, link, description) {
+        function openModal(title, link, description, step) {
             currentLink = link;
+            currentStep = step;
 
             const iconClass = iconMap[title] || 'fa-file-text-o';
             modalIcon.className = 'modal-icon fa ' + iconClass;
@@ -648,24 +972,65 @@
             });
             modalBody.innerHTML = bodyHtml;
 
-            modalActionBtn.onclick = function() {
-                openPopup(currentLink);
-            };
+            // Check if this step is already completed
+            const isCompleted = isStepCompleted(step);
+            
+            // Update button text and behavior
+            if (isCompleted) {
+                modalActionBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Already Completed';
+                modalActionBtn.disabled = true;
+                modalActionBtn.style.opacity = '0.6';
+                // Still allow opening the form if they want to review
+                modalActionBtn.onclick = function() {
+                    openPopup(currentLink);
+                };
+            } else {
+                modalActionBtn.innerHTML = '<i class="fa fa-external-link" aria-hidden="true"></i> Complete & Continue';
+                modalActionBtn.disabled = false;
+                modalActionBtn.style.opacity = '1';
+                modalActionBtn.onclick = function() {
+                    // Open the form
+                    openPopup(currentLink);
+                    // Mark step as completed (assuming they submit the form)
+                    if (confirm('After submitting the form, mark this step as complete?')) {
+                        completeStep(currentStep);
+                        closeModal();
+                        // Check if all steps are complete
+                        const allComplete = isStepCompleted(1) && isStepCompleted(2) && isStepCompleted(3) && 
+                                           isStepCompleted(4) && isStepCompleted(5) && isStepCompleted(6);
+                        if (allComplete) {
+                            setTimeout(function() {
+                                alert('🎉 Congratulations! You have completed all steps in the process flow!');
+                            }, 300);
+                        }
+                    }
+                };
+            }
 
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
-            // Focus the close button for accessibility
             modal.querySelector('.modal-close').focus();
         }
 
-        // attach click and keyboard events to cards
-        document.querySelectorAll('.project-card').forEach(card => {
+        // ============================================================
+        // CARD EVENT HANDLERS
+        // ============================================================
+        cards.forEach(card => {
             // Click handler
             card.addEventListener('click', function(e) {
+                const step = parseInt(this.dataset.step);
+                const accessible = isStepAccessible(step);
+                const completed = isStepCompleted(step);
+
+                if (!accessible && !completed) {
+                    alert('🔒 Please complete the "NDA & COI Forms" first before accessing this form.');
+                    return;
+                }
+
                 const title = this.dataset.title || 'Form';
                 const link = this.dataset.link || '#';
                 const desc = this.dataset.desc || 'Complete the required form for the tabletop exercise.';
-                openModal(title, link, desc);
+                openModal(title, link, desc, step);
             });
 
             // Keyboard support (Enter key)
@@ -677,17 +1042,41 @@
             });
         });
 
-        // close on escape
+        // ============================================================
+        // KEYBOARD SHORTCUTS
+        // ============================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                if (modal.classList.contains('open')) {
-                    closeModal();
-                }
-                if (banner.classList.contains('visible')) {
-                    closeBanner();
-                }
+                if (modal.classList.contains('open')) closeModal();
+                if (banner.classList.contains('visible')) closeBanner();
             }
         });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        loadState();
+        updateUI();
+
+        // Expose for debugging if needed
+        window.__processState = processState;
+        window.completeStep = completeStep;
+        window.resetProcess = function() {
+            if (confirm('Reset all progress? This cannot be undone.')) {
+                localStorage.removeItem(STATE_KEY);
+                processState = {
+                    step1_completed: false,
+                    step2_completed: false,
+                    step3_completed: false,
+                    step4_completed: false,
+                    step5_completed: false,
+                    step6_completed: false
+                };
+                saveState();
+                updateUI();
+                alert('Process has been reset.');
+            }
+        };
 
         // expose for inline onclick
         window.closeModal = closeModal;
