@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Africa CDC · Tabletop Exercise</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="AfricaCDClogo.png" />
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <style>
@@ -89,6 +91,66 @@
         .banner-close:focus-visible {
             outline: 3px solid #d4af37;
             outline-offset: 2px;
+        }
+
+        /* ============================================================
+           AUTO-DESTROY NOTICE (Idle-based)
+           ============================================================ */
+        .auto-destroy-notice {
+            background: #fdf6e3;
+            border: 1px solid #d4af37;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.7rem;
+            color: #5a6f63;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .auto-destroy-notice .label {
+            font-weight: 600;
+            color: #0f3b2c;
+        }
+        .auto-destroy-notice .time {
+            font-weight: 600;
+            color: #c0392b;
+        }
+        .auto-destroy-notice .reset-btn {
+            background: transparent;
+            border: 1px solid #c0392b;
+            color: #c0392b;
+            padding: 0.1rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .auto-destroy-notice .reset-btn:hover {
+            background: #c0392b;
+            color: white;
+        }
+        .auto-destroy-notice .idle-timer {
+            font-weight: 600;
+            color: #0f3b2c;
+            min-width: 50px;
+            display: inline-block;
+        }
+        .auto-destroy-notice .status-badge {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .auto-destroy-notice .status-badge.running {
+            background: #2b8c5e;
+            color: white;
+        }
+        .auto-destroy-notice .status-badge.paused {
+            background: #d4af37;
+            color: #0f3b2c;
         }
 
         /* ============================================================
@@ -225,18 +287,20 @@
             font-style: italic;
         }
 
-        /* card grid */
-        .projects-row {
-            display: flex;
-            flex-wrap: wrap;
+        /* ============================================================
+           CARD GRID - 3 per row, 2 rows
+           ============================================================ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
-            justify-content: flex-start;
             margin-top: 0.75rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .project-card {
-            flex: 1 1 200px;
-            max-width: 220px;
             text-decoration: none;
             border-radius: 12px;
             overflow: hidden;
@@ -310,6 +374,24 @@
             letter-spacing: 0.3px;
             backdrop-filter: blur(2px);
             border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        /* ============================================================
+           MOBILE: 2 per row on tablet, 1 per row on phone
+           ============================================================ */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 100%;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
         }
 
         /* modal */
@@ -398,6 +480,87 @@
         .modal-body .detail-value {
             flex: 1;
         }
+        
+        /* Submission ID field */
+        .submission-section {
+            background: #f8fbf9;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin: 0.5rem 0 0.75rem 0;
+            border: 1px solid #e2eaf0;
+        }
+        .submission-section .instruction {
+            font-size: 0.8rem;
+            color: #5a6f63;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        .submission-section .instruction strong {
+            color: #0f3b2c;
+        }
+        .submission-section .input-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .submission-section input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.5rem 0.8rem;
+            border: 1px solid #e2eaf0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #0f3b2c;
+            transition: border-color 0.2s;
+        }
+        .submission-section input[type="text"]:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+        .submission-section input[type="text"]:disabled {
+            background: #f0f3f2;
+            color: #8a9b91;
+            cursor: not-allowed;
+        }
+        .submission-section .verify-btn {
+            background: #2b8c5e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+        .submission-section .verify-btn:hover {
+            background: #1f6e4a;
+            transform: scale(1.02);
+        }
+        .submission-section .verify-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .submission-section .verify-btn.verified {
+            background: #2b8c5e;
+            cursor: default;
+        }
+        .submission-section .status-msg {
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            font-weight: 500;
+        }
+        .submission-section .status-msg.success {
+            color: #2b8c5e;
+        }
+        .submission-section .status-msg.error {
+            color: #c0392b;
+        }
+
         .modal-footer {
             margin-top: 1.5rem;
             padding-top: 1rem;
@@ -432,6 +595,23 @@
         }
         .modal-footer .btn-primary:hover { background: #1a5a3e; transform: scale(1.02); }
         .modal-footer .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .modal-footer .btn-success {
+            background: #2b8c5e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .modal-footer .btn-success:hover { background: #1f6e4a; transform: scale(1.02); }
+        .modal-footer .btn-success:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
@@ -490,6 +670,9 @@
             .process-flow { flex-direction: column; align-items: stretch; gap: 0.4rem; }
             .process-step { font-size: 0.7rem; }
             .process-arrow { display: none; }
+            .submission-section .input-group { flex-direction: column; }
+            .submission-section .verify-btn { width: 100%; justify-content: center; }
+            .auto-destroy-notice { font-size: 0.6rem; flex-direction: column; text-align: center; }
         }
         @media (max-width: 480px) {
             .project-card { flex: 1 1 100%; max-width: 100%; }
@@ -520,6 +703,18 @@
         <img src="AfricaCDClogo.png" alt="Africa CDC Logo" />
         <span>Tabletop Exercise · Ethics Review Timelines to 10–15 Days</span>
     </header>
+
+    <!-- ============================================================
+         AUTO-DESTROY NOTICE (Idle-based with Popup Pause)
+         ============================================================ -->
+    <div class="auto-destroy-notice" id="autoDestroyNotice">
+        <span>
+            For security, Your access will reset after <span class="time">60 minutes</span> of inactivity.
+            <span id="idleTimerDisplay">⏳ <span class="idle-timer" id="idleTimer">60:00</span></span>
+            <span class="status-badge running" id="timerStatusBadge">● Running</span>
+        </span>
+        <button class="reset-btn" onclick="manualReset()">Reset Now</button>
+    </div>
 
     <!-- ============================================================
          PROCESS FLOW STATUS BAR
@@ -565,11 +760,11 @@
     <!-- navigation -->
     <section class="section-head">
         <h1><i class="fa fa-arrow-circle-right" style="color:#d4af37;" aria-hidden="true"></i> Select an Activity</h1>
-        <p><em>Click on a card to access. Complete steps in order.</em></p>
+        <p><em>Click on a card to access. If locked out, start at the NDA &amp; COI form</em></p>
     </section>
 
-    <!-- cards -->
-    <div class="projects-row" role="list">
+    <!-- cards - Grid layout (3 per row, 2 rows) -->
+    <div class="projects-grid" role="list">
         <!-- card 1: Submission Checklist (Step 1 - Always accessible) -->
         <div class="project-card" role="listitem" tabindex="0" data-title="Submission Checklist" data-icon="fa-check-square-o" data-desc="Complete the submission checklist before proceeding with the ethics review." data-link="https://redcap.link/g2ac0b76" data-step="1" aria-label="Submission Checklist form">
             <div class="projects-container">
@@ -666,8 +861,21 @@
         <div class="modal-sub" id="modalSub">Description of the form and its purpose.</div>
         <div class="modal-body" id="modalBody">
             <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value">Ethics &amp; Regulatory</span></div>
-            <div class="detail-row"><span class="detail-label">Expected duration</span><span class="detail-value">10–15 minutes</span></div>
-            <div class="detail-row"><span class="detail-label">Access</span><span class="detail-value">Open to all participants</span></div>
+            <div class="detail-row"><span class="detail-label">Purpose</span><span class="detail-value">Complete the required submission.</span></div>
+        </div>
+        <!-- Submission ID Section (only shown for NDA step) -->
+        <div class="submission-section" id="submissionSection" style="display:none;">
+            <div class="instruction">
+                <strong>After submitting the form in RedCap:</strong><br />
+                1. Copy the <strong>Submission ID</strong> from the "Survey Complete" page<br />
+                2. Paste it below and click "Verify &amp; Complete" to unlock the next steps.<br />
+                3. Remember to save it in a secure place, you will need it everytime your access expires for security.
+            </div>
+            <div class="input-group">
+                <input type="text" id="submissionIdInput" placeholder="Enter RedCap Submission ID..." />
+                <button class="verify-btn" id="verifyBtn"><i class="fa fa-check" aria-hidden="true"></i> Verify &amp; Complete</button>
+            </div>
+            <div class="status-msg" id="statusMsg"></div>
         </div>
         <div class="modal-footer">
             <button class="btn-secondary" onclick="closeModal()">Close</button>
@@ -684,21 +892,249 @@
         'use strict';
 
         // ============================================================
-        // STATE MANAGEMENT - Using localStorage for persistence
+        // IDLE-BASED AUTO-DESTRUCT (60 minutes) with POPUP PAUSE
         // ============================================================
         const STATE_KEY = 'africa_cdc_process_state';
-        
-        // Default state: Only Steps 1 & 2 are accessible
+        const SUBMISSIONS_KEY = 'africa_cdc_submissions';
+        const IDLE_TIMEOUT = 60 * 60 * 1000; // 60 minutes in milliseconds
+        const IDLE_CHECK_INTERVAL = 1000; // Check every second
+
+        // Default state
         let processState = {
-            step1_completed: false,  // Submission Checklist
-            step2_completed: false,  // NDA & COI
-            step3_completed: false,  // Submissions
-            step4_completed: false,  // Ethics Review
-            step5_completed: false,  // Regulatory Review
-            step6_completed: false   // Joint Review
+            step1_completed: false,
+            step2_completed: false,
+            step3_completed: false,
+            step4_completed: false,
+            step5_completed: false,
+            step6_completed: false
         };
 
-        // Load state from localStorage (persists forever)
+        let submissions = {};
+        let idleTimer = null;
+        let idleSeconds = 0;
+        let isIdle = false;
+        let isPopupOpen = false;
+        let popupWindow = null;
+
+        // ============================================================
+        // IDLE TIMER FUNCTIONS
+        // ============================================================
+        function resetIdleTimer() {
+            idleSeconds = 0;
+            isIdle = false;
+            updateIdleDisplay();
+            updateStatusBadge();
+            clearTimeout(idleTimer);
+            if (!isPopupOpen) {
+                startIdleTimer();
+            }
+        }
+
+        function startIdleTimer() {
+            clearTimeout(idleTimer);
+            if (isPopupOpen) {
+                // Don't start timer if popup is open
+                updateStatusBadge();
+                return;
+            }
+            idleTimer = setTimeout(function() {
+                isIdle = true;
+                performAutoDestruct();
+            }, IDLE_TIMEOUT);
+            updateStatusBadge();
+        }
+
+        function pauseIdleTimer() {
+            clearTimeout(idleTimer);
+            updateStatusBadge();
+        }
+
+        function resumeIdleTimer() {
+            if (!isPopupOpen) {
+                startIdleTimer();
+            }
+            updateStatusBadge();
+        }
+
+        function updateIdleDisplay() {
+            const display = document.getElementById('idleTimer');
+            if (!display) return;
+            
+            const remaining = Math.max(0, Math.floor((IDLE_TIMEOUT - (idleSeconds * 1000)) / 1000));
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            display.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+        }
+
+        function updateStatusBadge() {
+            const badge = document.getElementById('timerStatusBadge');
+            if (!badge) return;
+            
+            if (isPopupOpen) {
+                badge.textContent = '⏸ Paused (Popup)';
+                badge.className = 'status-badge paused';
+            } else if (isIdle) {
+                badge.textContent = '⏹ Idle';
+                badge.className = 'status-badge paused';
+            } else {
+                badge.textContent = '● Running';
+                badge.className = 'status-badge running';
+            }
+        }
+
+        // Count up every second
+        setInterval(function() {
+            if (!isIdle && !isPopupOpen) {
+                idleSeconds++;
+                updateIdleDisplay();
+            }
+        }, IDLE_CHECK_INTERVAL);
+
+        // ============================================================
+        // POPUP MANAGEMENT
+        // ============================================================
+        function openPopup(link) {
+            if (!link || link === '#') {
+                alert('This form is not yet available. Please check back later.');
+                return null;
+            }
+            
+            const width = 800;
+            const height = 700;
+            const left = (window.screen.width - width) / 2;
+            const top = (window.screen.height - height) / 2;
+            
+            // Open popup
+            const popup = window.open(
+                link,
+                '_blank',
+                `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes,toolbar=no,menubar=no,status=no`
+            );
+            
+            if (popup) {
+                // Popup opened successfully
+                isPopupOpen = true;
+                pauseIdleTimer();
+                updateStatusBadge();
+                
+                // Monitor popup close
+                const checkPopupClosed = setInterval(function() {
+                    if (popup.closed) {
+                        clearInterval(checkPopupClosed);
+                        isPopupOpen = false;
+                        popupWindow = null;
+                        resumeIdleTimer();
+                        updateStatusBadge();
+                        // Reset idle timer on return
+                        resetIdleTimer();
+                    }
+                }, 500);
+                
+                popupWindow = popup;
+                popup.focus();
+            } else {
+                // Popup blocked - fallback to new tab
+                window.open(link, '_blank');
+            }
+            
+            return popup;
+        }
+
+        // ============================================================
+        // USER ACTIVITY DETECTION
+        // ============================================================
+        const ACTIVITY_EVENTS = [
+            'click', 'mousemove', 'keydown', 'scroll',
+            'touchstart', 'touchmove', 'wheel', 'resize'
+        ];
+
+        function onUserActivity() {
+            if (isPopupOpen) return; // Don't reset timer if popup is open
+            
+            if (isIdle) {
+                isIdle = false;
+                loadState();
+                updateUI();
+                resetIdleTimer();
+                startIdleTimer();
+            } else {
+                resetIdleTimer();
+                startIdleTimer();
+            }
+        }
+
+        // Attach activity listeners
+        ACTIVITY_EVENTS.forEach(function(event) {
+            document.addEventListener(event, onUserActivity);
+        });
+
+        // Also detect when tab becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !isPopupOpen) {
+                onUserActivity();
+            }
+        });
+
+        // ============================================================
+        // AUTO-DESTRUCT FUNCTION
+        // ============================================================
+        function performAutoDestruct() {
+            const hadData = localStorage.getItem(STATE_KEY) !== null;
+            
+            // Clear ALL data
+            localStorage.removeItem(STATE_KEY);
+            localStorage.removeItem(SUBMISSIONS_KEY);
+            
+            // Reset state
+            processState = {
+                step1_completed: false,
+                step2_completed: false,
+                step3_completed: false,
+                step4_completed: false,
+                step5_completed: false,
+                step6_completed: false
+            };
+            submissions = {};
+            
+            updateUI();
+            
+            if (hadData) {
+                const notice = document.getElementById('autoDestroyNotice');
+                if (notice) {
+                    notice.style.borderColor = '#c0392b';
+                    notice.style.background = '#fdf0ed';
+                    const msg = document.createElement('span');
+                    msg.style.color = '#c0392b';
+                    msg.style.fontWeight = 'bold';
+                    msg.textContent = ' ⚠️ Session expired due to inactivity. Progress reset.';
+                    notice.appendChild(msg);
+                    setTimeout(function() {
+                        msg.remove();
+                        notice.style.borderColor = '';
+                        notice.style.background = '';
+                    }, 5000);
+                }
+            }
+            
+            resetIdleTimer();
+            if (!isPopupOpen) {
+                startIdleTimer();
+            }
+        }
+
+        // ============================================================
+        // MANUAL RESET
+        // ============================================================
+        window.manualReset = function() {
+            if (confirm('⚠️ Are you sure you want to reset ALL progress?\n\nThis will clear all submission IDs and completed steps.')) {
+                performAutoDestruct();
+                alert('✅ All progress has been reset.');
+            }
+        };
+
+        // ============================================================
+        // STATE MANAGEMENT
+        // ============================================================
         function loadState() {
             const saved = localStorage.getItem(STATE_KEY);
             if (saved) {
@@ -709,11 +1145,19 @@
                     // ignore
                 }
             }
+            const subSaved = localStorage.getItem(SUBMISSIONS_KEY);
+            if (subSaved) {
+                try {
+                    submissions = JSON.parse(subSaved);
+                } catch (e) {
+                    // ignore
+                }
+            }
         }
 
-        // Save state to localStorage
         function saveState() {
             localStorage.setItem(STATE_KEY, JSON.stringify(processState));
+            localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(submissions));
         }
 
         // ============================================================
@@ -725,6 +1169,10 @@
         const modalBody = document.getElementById('modalBody');
         const modalIcon = document.getElementById('modalIcon');
         const modalActionBtn = document.getElementById('modalActionBtn');
+        const submissionSection = document.getElementById('submissionSection');
+        const submissionIdInput = document.getElementById('submissionIdInput');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const statusMsg = document.getElementById('statusMsg');
 
         const banner = document.getElementById('bannerOverlay');
         const BANNER_KEY = 'africa_cdc_banner_dismissed';
@@ -754,15 +1202,22 @@
             5: document.getElementById('arrow5')
         };
 
-        // All cards
         const cards = document.querySelectorAll('.project-card');
 
         // ============================================================
         // STEP COMPLETION FUNCTIONS
         // ============================================================
-        function completeStep(stepNumber) {
+        function completeStep(stepNumber, submissionId) {
             const key = `step${stepNumber}_completed`;
             processState[key] = true;
+            
+            if (submissionId) {
+                submissions[`step${stepNumber}`] = {
+                    id: submissionId,
+                    timestamp: new Date().toISOString()
+                };
+            }
+            
             saveState();
             updateUI();
         }
@@ -772,11 +1227,8 @@
         }
 
         function isStepAccessible(stepNumber) {
-            // Step 1 (Checklist) - always accessible
             if (stepNumber === 1) return true;
-            // Step 2 (NDA) - always accessible
             if (stepNumber === 2) return true;
-            // Steps 3, 4, 5, 6 require NDA (Step 2)
             if (stepNumber === 3) return isStepCompleted(2);
             if (stepNumber === 4) return isStepCompleted(2);
             if (stepNumber === 5) return isStepCompleted(2);
@@ -784,18 +1236,21 @@
             return false;
         }
 
+        function getSubmissionId(stepNumber) {
+            const key = `step${stepNumber}`;
+            return submissions[key] ? submissions[key].id : null;
+        }
+
         // ============================================================
         // UPDATE UI
         // ============================================================
         function updateUI() {
-            // Update step statuses
             for (let i = 1; i <= 6; i++) {
                 const el = stepEls[i];
                 const statusEl = stepStatusEls[i];
                 const completed = isStepCompleted(i);
                 const accessible = isStepAccessible(i);
 
-                // Remove all classes
                 el.classList.remove('active', 'completed', 'locked');
 
                 if (completed) {
@@ -810,7 +1265,6 @@
                 }
             }
 
-            // Update arrows
             for (let i = 1; i <= 5; i++) {
                 const arrow = arrowEls[i];
                 if (isStepCompleted(i)) {
@@ -820,7 +1274,6 @@
                 }
             }
 
-            // Update cards
             cards.forEach(card => {
                 const step = parseInt(card.dataset.step);
                 const accessible = isStepAccessible(step);
@@ -869,7 +1322,7 @@
         });
 
         // ============================================================
-        // CARD DATA
+        // CARD DATA (removed all time/duration references)
         // ============================================================
         const iconMap = {
             'Submission Checklist': 'fa-check-square-o',
@@ -883,39 +1336,27 @@
         const detailMap = {
             'Submission Checklist': [
                 { label: 'Type', value: 'Pre‑submission checklist' },
-                { label: 'Estimated time', value: '5–10 minutes' },
-                { label: 'Purpose', value: 'Ensure all required documents are ready before ethics review.' },
-                { label: 'Required for', value: 'All submissions' }
+                { label: 'Purpose', value: 'Ensure all required documents are ready before ethics review.' }
             ],
             'NDA &amp; Conflict of Interest': [
                 { label: 'Type', value: 'Confidentiality & COI' },
-                { label: 'Estimated time', value: '5 minutes' },
-                { label: 'Purpose', value: 'Protect sensitive information and disclose potential conflicts.' },
-                { label: 'Required for', value: 'Review panel members and observers' }
+                { label: 'Purpose', value: 'Protect sensitive information and disclose potential conflicts.' }
             ],
             'Submissions': [
                 { label: 'Type', value: 'Protocol submission' },
-                { label: 'Estimated time', value: '10–15 minutes' },
-                { label: 'Purpose', value: 'Submit your protocol and supporting documents for review.' },
-                { label: 'Required for', value: 'All research protocols' }
+                { label: 'Purpose', value: 'Submit your protocol and supporting documents for review.' }
             ],
             'Ethics Review Form': [
                 { label: 'Type', value: 'Ethics review' },
-                { label: 'Estimated time', value: '15–20 minutes' },
-                { label: 'Purpose', value: 'Formal ethics review form for review of research ethics' },
-                { label: 'Required for', value: 'All research protocols' }
+                { label: 'Purpose', value: 'Formal ethics review form for review of research ethics' }
             ],
             'Regulatory Review Form': [
                 { label: 'Type', value: 'Regulatory review' },
-                { label: 'Estimated time', value: '15–20 minutes' },
-                { label: 'Purpose', value: 'Regulatory review for submitted protocols.' },
-                { label: 'Required for', value: 'All interventions seeking emergency approval' }
+                { label: 'Purpose', value: 'Regulatory review for submitted protocols.' }
             ],
             'Joint Review Form': [
                 { label: 'Type', value: 'Joint review' },
-                { label: 'Estimated time', value: '15–20 minutes' },
-                { label: 'Purpose', value: 'Joint review by ethics and regulatory committees.' },
-                { label: 'Required for', value: 'All protocols requiring joint approval' }
+                { label: 'Purpose', value: 'Joint review by ethics and regulatory committees.' }
             ]
         };
 
@@ -924,36 +1365,24 @@
         // ============================================================
         let currentLink = '#';
         let currentStep = 1;
+        let currentTitle = '';
 
         function closeModal() {
             modal.classList.remove('open');
             document.body.style.overflow = '';
-        }
-
-        function openPopup(link) {
-            if (!link || link === '#') {
-                alert('This form is not yet available. Please check back later.');
-                return;
-            }
-            const width = 800;
-            const height = 700;
-            const left = (window.screen.width - width) / 2;
-            const top = (window.screen.height - height) / 2;
-            const popup = window.open(
-                link,
-                '_blank',
-                `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes,toolbar=no,menubar=no,status=no`
-            );
-            if (popup) {
-                popup.focus();
-            } else {
-                window.open(link, '_blank');
-            }
+            submissionSection.style.display = 'none';
+            submissionIdInput.value = '';
+            statusMsg.textContent = '';
+            statusMsg.className = 'status-msg';
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Verify & Complete';
+            verifyBtn.className = 'verify-btn';
         }
 
         function openModal(title, link, description, step) {
             currentLink = link;
             currentStep = step;
+            currentTitle = title;
 
             const iconClass = iconMap[title] || 'fa-file-text-o';
             modalIcon.className = 'modal-icon fa ' + iconClass;
@@ -963,7 +1392,6 @@
 
             const details = detailMap[title] || [
                 { label: 'Type', value: 'Form' },
-                { label: 'Estimated time', value: '10-20 minutes' },
                 { label: 'Purpose', value: 'Complete the required submission.' }
             ];
             let bodyHtml = '';
@@ -972,51 +1400,131 @@
             });
             modalBody.innerHTML = bodyHtml;
 
-            // Check if this step is already completed
             const isCompleted = isStepCompleted(step);
+            const isNdaStep = (step === 2);
             
-            // Update button text and behavior
+            if (isNdaStep && !isCompleted) {
+                submissionSection.style.display = 'block';
+                submissionIdInput.value = '';
+                statusMsg.textContent = '';
+                statusMsg.className = 'status-msg';
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Verify & Complete';
+                verifyBtn.className = 'verify-btn';
+                
+                const existingId = getSubmissionId(step);
+                if (existingId) {
+                    submissionIdInput.value = existingId;
+                    statusMsg.textContent = '✅ Already verified with ID: ' + existingId;
+                    statusMsg.className = 'status-msg success';
+                    verifyBtn.disabled = true;
+                    verifyBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Verified ✓';
+                    verifyBtn.className = 'verify-btn verified';
+                }
+            } else {
+                submissionSection.style.display = 'none';
+            }
+
             if (isCompleted) {
                 modalActionBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Already Completed';
                 modalActionBtn.disabled = true;
                 modalActionBtn.style.opacity = '0.6';
-                // Still allow opening the form if they want to review
                 modalActionBtn.onclick = function() {
                     openPopup(currentLink);
                 };
             } else {
-                modalActionBtn.innerHTML = '<i class="fa fa-external-link" aria-hidden="true"></i> Complete & Continue';
+                modalActionBtn.innerHTML = '<i class="fa fa-external-link" aria-hidden="true"></i> Open Form';
                 modalActionBtn.disabled = false;
                 modalActionBtn.style.opacity = '1';
                 modalActionBtn.onclick = function() {
-                    // Open the form
                     openPopup(currentLink);
-                    // Mark step as completed (assuming they submit the form)
-                    if (confirm('After submitting the form, mark this step as complete?')) {
-                        completeStep(currentStep);
-                        closeModal();
-                        // Check if all steps are complete
-                        const allComplete = isStepCompleted(1) && isStepCompleted(2) && isStepCompleted(3) && 
-                                           isStepCompleted(4) && isStepCompleted(5) && isStepCompleted(6);
-                        if (allComplete) {
-                            setTimeout(function() {
-                                alert('🎉 Congratulations! You have completed all steps in the process flow!');
-                            }, 300);
-                        }
-                    }
                 };
             }
 
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
             modal.querySelector('.modal-close').focus();
+
+            if (isNdaStep && !isCompleted) {
+                setTimeout(function() {
+                    submissionIdInput.focus();
+                }, 300);
+            }
+        }
+
+        // ============================================================
+        // VERIFY BUTTON HANDLER with 5-character minimum
+        // ============================================================
+        verifyBtn.addEventListener('click', handleVerify);
+        
+        submissionIdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleVerify();
+            }
+        });
+
+        // Real-time visual feedback as user types
+        submissionIdInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            if (val.length > 0 && val.length < 5) {
+                this.style.borderColor = '#c0392b';
+                this.style.background = '#fdf0ed';
+            } else if (val.length >= 5) {
+                this.style.borderColor = '#2b8c5e';
+                this.style.background = '#f0fae8';
+            } else {
+                this.style.borderColor = '';
+                this.style.background = '';
+            }
+        });
+
+        function handleVerify() {
+            const rawId = submissionIdInput.value;
+            const id = rawId.trim();
+            
+            // Check 1: Is it empty or just spaces?
+            if (!id || id.length === 0) {
+                statusMsg.textContent = '⚠️ Please enter your RedCap Submission ID.';
+                statusMsg.className = 'status-msg error';
+                submissionIdInput.style.borderColor = '#c0392b';
+                submissionIdInput.style.background = '#fdf0ed';
+                submissionIdInput.focus();
+                return;
+            }
+            
+            // Check 2: Is it at least 5 characters?
+            if (id.length < 5) {
+                statusMsg.textContent = '⚠️ Submission ID must be at least 5 characters long. (You entered ' + id.length + ')';
+                statusMsg.className = 'status-msg error';
+                submissionIdInput.style.borderColor = '#c0392b';
+                submissionIdInput.style.background = '#fdf0ed';
+                submissionIdInput.focus();
+                submissionIdInput.select();
+                return;
+            }
+
+            // All validations passed!
+            submissionIdInput.style.borderColor = '#2b8c5e';
+            submissionIdInput.style.background = '#f0fae8';
+            statusMsg.textContent = '✅ Verified! Submission ID saved.';
+            statusMsg.className = 'status-msg success';
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Verified ✓';
+            verifyBtn.className = 'verify-btn verified';
+
+            completeStep(currentStep, id);
+            
+            setTimeout(function() {
+                closeModal();
+                alert('✅ NDA & COI forms verified!\n\nSubmission ID: ' + id + '\n\nYou can now access Submissions, Ethics, Regulatory, and Joint Review forms.');
+            }, 600);
         }
 
         // ============================================================
         // CARD EVENT HANDLERS
         // ============================================================
         cards.forEach(card => {
-            // Click handler
             card.addEventListener('click', function(e) {
                 const step = parseInt(this.dataset.step);
                 const accessible = isStepAccessible(step);
@@ -1033,7 +1541,6 @@
                 openModal(title, link, desc, step);
             });
 
-            // Keyboard support (Enter key)
             card.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -1057,31 +1564,28 @@
         // ============================================================
         loadState();
         updateUI();
+        
+        // Start idle timer
+        resetIdleTimer();
+        if (!isPopupOpen) {
+            startIdleTimer();
+        }
+        updateStatusBadge();
 
-        // Expose for debugging if needed
+        // ============================================================
+        // Override openPopup to use the one with popup tracking
+        // ============================================================
+        window.openPopup = openPopup;
+
+        // Expose for debugging
         window.__processState = processState;
+        window.__submissions = submissions;
         window.completeStep = completeStep;
-        window.resetProcess = function() {
-            if (confirm('Reset all progress? This cannot be undone.')) {
-                localStorage.removeItem(STATE_KEY);
-                processState = {
-                    step1_completed: false,
-                    step2_completed: false,
-                    step3_completed: false,
-                    step4_completed: false,
-                    step5_completed: false,
-                    step6_completed: false
-                };
-                saveState();
-                updateUI();
-                alert('Process has been reset.');
-            }
-        };
+        window.manualReset = manualReset;
+        window.performAutoDestruct = performAutoDestruct;
 
-        // expose for inline onclick
         window.closeModal = closeModal;
         window.openModal = openModal;
-        window.openPopup = openPopup;
         window.closeBanner = closeBanner;
 
     })();
